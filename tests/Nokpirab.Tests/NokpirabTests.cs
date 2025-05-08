@@ -11,7 +11,7 @@ namespace Nokpirab.Tests;
 public class NokpirabTests
 {
 	[Theory, AutoNSubstituteData]
-	public async Task SendAsync_CreateWithoutReturningResultCommand_ShouldInvokeHandler(
+	public async Task SendAsync_CommandWithoutReturningResult_ShouldInvokeHandler(
 		CreateWithoutReturningResultCommand command,
 		ICommandHandler<CreateWithoutReturningResultCommand> handler,
 		IServiceProvider serviceProvider)
@@ -30,7 +30,7 @@ public class NokpirabTests
 	}
 
 	[Theory, AutoNSubstituteData]
-	public async Task SendAsync_CreateStringResultCommand_ShouldInvokeHandler(
+	public async Task SendAsync_CommandWithReturningResult_ShouldInvokeHandler(
 		CreateStringResultCommand command, 
 		ICommandHandler<CreateStringResultCommand, string> handler,
 		string expectedResult,
@@ -50,7 +50,7 @@ public class NokpirabTests
 	}
 	
 	[Theory, AutoNSubstituteData]
-	public async Task SendAsync_CreateStringResultCommand_ShouldReturnExpectedResult(
+	public async Task SendAsync_CommandWithReturningResult_ShouldReturnExpectedResult(
 		CreateStringResultCommand command, 
 		ICommandHandler<CreateStringResultCommand, string> handler,
 		string expectedResult,
@@ -70,7 +70,7 @@ public class NokpirabTests
 	}
 	
 	[Theory, AutoNSubstituteData]
-	public async Task SendAsync_GetStringResultQuery_ShouldInvokeHandler(
+	public async Task SendAsync_Query_ShouldInvokeHandler(
 		GetStringResultQuery query, 
 		IQueryHandler<GetStringResultQuery, string> handler,
 		string expectedResult,
@@ -90,7 +90,7 @@ public class NokpirabTests
 	}
 	
 	[Theory, AutoNSubstituteData]
-	public async Task SendAsync_GetStringResultQuery_ShouldReturnExpectedResult(
+	public async Task SendAsync_Query_ShouldReturnExpectedResult(
 		GetStringResultQuery query, 
 		IQueryHandler<GetStringResultQuery, string> handler,
 		string expectedResult,
@@ -108,6 +108,38 @@ public class NokpirabTests
 		// Assert
 		result.ShouldBe(expectedResult);
 	}
+	
+	[Theory, AutoNSubstituteData]
+	public async Task SendAsync_CommandWithoutReturningResult_HandlerNotFound_ShouldThrowHandlerNotFoundException(
+		FakeCommandWithoutHandler command,
+		IServiceProvider serviceProvider)
+	{
+		// Arrange
+		var sut = new Nokpirab(serviceProvider);
+
+		// Act & Assert
+		var exception = await Should.ThrowAsync<HandlerNotFoundException>(() => sut.SendAsync(command));
+
+		exception.Message.ShouldContain(nameof(FakeCommandWithoutHandler));
+	}
+	
+	[Theory, AutoNSubstituteData]
+	public async Task SendAsync_Query_HandlerNotFound_ShouldThrowHandlerNotFoundException(
+		FakeQueryWithoutHandler query,
+		IServiceProvider serviceProvider)
+	{
+		// Arrange
+		var sut = new Nokpirab(serviceProvider);
+
+		// Act & Assert
+		var exception = await Should.ThrowAsync<HandlerNotFoundException>(() => sut.SendAsync(query));
+
+		exception.Message.ShouldContain(nameof(FakeQueryWithoutHandler));
+	}
+
+	public record FakeCommandWithoutHandler : ICommand;
+	
+	public record FakeQueryWithoutHandler : IQuery<string>;
 
 	private class AutoNSubstituteDataAttribute : AutoDataAttribute
 	{

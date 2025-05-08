@@ -1,6 +1,6 @@
 ﻿namespace Nokpirab.Tests.FakeHandlers;
 
-public class CreateWithoutReturningResultCommand : ICommand;
+public record CreateWithoutReturningResultCommand : ICommand;
 	
 public class CreateWithoutReturningResultCommandHandler : ICommandHandler<CreateWithoutReturningResultCommand>
 {
@@ -10,7 +10,7 @@ public class CreateWithoutReturningResultCommandHandler : ICommandHandler<Create
 	}
 }
 
-public class CreateStringResultCommand : ICommand<string>;
+public record CreateStringResultCommand : ICommand<string>;
 
 public class CreateStringResultCommandHandler : ICommandHandler<CreateStringResultCommand, string>
 {
@@ -20,7 +20,7 @@ public class CreateStringResultCommandHandler : ICommandHandler<CreateStringResu
 	}
 }
 
-public class GetStringResultQuery : IQuery<string>;
+public record GetStringResultQuery : IQuery<string>;
 
 public class GetStringResultQueryHandler : IQueryHandler<GetStringResultQuery, string>
 {

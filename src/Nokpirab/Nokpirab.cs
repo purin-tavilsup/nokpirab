@@ -17,7 +17,7 @@ internal class Nokpirab : INokpirab
     {
         var commandType = command.GetType();
         var handlerType = typeof(ICommandHandler<>).MakeGenericType(commandType);
-        dynamic handler = _serviceProvider.GetRequiredService(handlerType);
+        var handler = GetHandler(handlerType, commandType);
         
         await handler.HandleAsync((dynamic)command, cancellationToken);
     }
@@ -26,7 +26,7 @@ internal class Nokpirab : INokpirab
     {
         var commandType = command.GetType();
         var handlerType = typeof(ICommandHandler<,>).MakeGenericType(commandType, typeof(TResult));
-        dynamic handler = _serviceProvider.GetRequiredService(handlerType);
+        var handler = GetHandler(handlerType, commandType);
         
         return await handler.HandleAsync((dynamic)command, cancellationToken);
     }
@@ -35,8 +35,20 @@ internal class Nokpirab : INokpirab
     {
         var queryType = query.GetType();
         var handlerType = typeof(IQueryHandler<,>).MakeGenericType(queryType, typeof(TResult));
-        dynamic handler = _serviceProvider.GetRequiredService(handlerType);
+        var handler = GetHandler(handlerType, queryType);
         
         return await handler.HandleAsync((dynamic)query, cancellationToken);
+    }
+    
+    private dynamic GetHandler(Type handlerType, Type requestType)
+    {
+        try
+        {
+            return _serviceProvider.GetRequiredService(handlerType);
+        }
+        catch (InvalidOperationException)
+        {
+            throw new HandlerNotFoundException($"No handler was found for '{requestType.Name}'");
+        }
     }
 }

@@ -3,13 +3,13 @@ using Microsoft.Extensions.DependencyInjection;
 
 namespace Nokpirab;
 
-public static class NokpirabServiceRegistration
+public static class ServiceCollectionExtensions
 {
-	public static IServiceCollection AddNokpirab(this IServiceCollection services, params Assembly[] assemblies)
+	public static IServiceCollection AddNokpirabFromAssembly(this IServiceCollection services, Assembly assembly)
 	{
-		services.AddSingleton<INokpirab, Nokpirab>();
+		services.AddTransient<INokpirab, Nokpirab>();
 
-		var allTypes = assemblies.SelectMany(x => x.GetTypes()).ToList();
+		var allTypes = assembly.GetTypes().ToList();
 
 		RegisterHandlers(services, allTypes, typeof(ICommandHandler<>));
 		RegisterHandlers(services, allTypes, typeof(ICommandHandler<,>));
@@ -29,7 +29,7 @@ public static class NokpirabServiceRegistration
 
 			foreach (var @interface in interfaces)
 			{
-				services.AddScoped(@interface, handler);
+				services.AddTransient(@interface, handler);
 			}
 		}
 	}

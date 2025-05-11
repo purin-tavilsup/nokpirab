@@ -8,13 +8,13 @@ using Shouldly;
 
 namespace Nokpirab.Tests;
 
-public class NokpirabServiceRegistrationTests
+public class ServiceCollectionExtensionsTests
 {
 	[Theory, AutoNSubstituteData]
 	public void AddNokpirab_ShouldRegisterINokpirab(IServiceCollection sut)
 	{
 		// Act
-		sut.AddNokpirab(Assembly.GetExecutingAssembly());
+		sut.AddNokpirabFromAssembly(Assembly.GetExecutingAssembly());
 		
 		var provider = sut.BuildServiceProvider();
 
@@ -32,7 +32,7 @@ public class NokpirabServiceRegistrationTests
 														  IServiceCollection sut)
 	{
 		// Act
-		sut.AddNokpirab(Assembly.GetExecutingAssembly());
+		sut.AddNokpirabFromAssembly(Assembly.GetExecutingAssembly());
 		
 		var provider = sut.BuildServiceProvider();
 

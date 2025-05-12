@@ -1,6 +1,7 @@
 # Nokpirab 🕊️
 
 ![MIT License](https://img.shields.io/badge/license-MIT-blue.svg)
+[![Build](https://github.com/purin-tavilsup/nokpirab/actions/workflows/ci.yml/badge.svg)](https://github.com/purin-tavilsup/nokpirab/actions/workflows/ci.yml)
 
 **Nokpirab** is a lightweight and test-friendly mediator library designed to simplify command and query handling in .NET applications.  
 Nokpirab helps you implement the **CQRS pattern** cleanly — with minimal ceremony and maximum flexibility.

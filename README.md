@@ -22,7 +22,7 @@ This registers `INokpirab` as transient and then scans handlers from an assembly
 ```
 public record CreateOrderCommand(Guid OrderId) : ICommand;
 
-public class CreateOrderHandler : ICommandHandler<CreateOrderCommand>
+public class CreateOrderCommandHandler : ICommandHandler<CreateOrderCommand>
 {
     public Task HandleAsync(CreateOrderCommand command, CancellationToken cancellationToken = default)
     {

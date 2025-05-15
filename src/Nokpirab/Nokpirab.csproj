@@ -4,10 +4,28 @@
         <TargetFramework>net8.0</TargetFramework>
         <ImplicitUsings>enable</ImplicitUsings>
         <Nullable>enable</Nullable>
+        <PackageId>Nokpirab</PackageId>
+        <Version>1.0.0</Version>
+        <Company>Exconeer</Company>
+        <Authors>Exconeer</Authors>
+        <Title>Nokpirab</Title>
+        <Description>A lightweight and test-friendly mediator library designed to simplify command and query handling in .NET applications.</Description>
+        <PackageTags>cqrs mediator .net</PackageTags>
+        <RepositoryUrl>https://github.com/purin-tavilsup/nokpirab</RepositoryUrl>
+        <RepositoryType>git</RepositoryType>
+        <PackageLicenseExpression>MIT</PackageLicenseExpression>
+        <Copyright>Copyright © 2025 Exconeer</Copyright>
+        <PackageIcon>nokpirab-icon.png</PackageIcon>
+        <PackageReadmeFile>README.md</PackageReadmeFile>
+        <IncludeSymbols>true</IncludeSymbols>
+        <IncludeSource>true</IncludeSource>
+        <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
     </PropertyGroup>
 
     <ItemGroup>
-      <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="9.0.4" />
+        <None Include="nokpirab-icon.png" Pack="true" PackagePath="" />
+        <None Include="..\..\README.md" Pack="true" PackagePath=""/>
+        <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="9.0.4" />
     </ItemGroup>
 
 </Project>

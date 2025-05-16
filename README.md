@@ -2,11 +2,24 @@
 
 ![MIT License](https://img.shields.io/badge/license-MIT-blue.svg)
 [![Build](https://github.com/purin-tavilsup/nokpirab/actions/workflows/ci.yml/badge.svg)](https://github.com/purin-tavilsup/nokpirab/actions/workflows/ci.yml)
+[![NuGet](https://img.shields.io/nuget/v/Nokpirab.svg?style=flat-square)](https://www.nuget.org/packages/Nokpirab/)
 
-**Nokpirab** is a lightweight and test-friendly mediator library designed to simplify command and query handling in .NET applications.  
+
+**Nokpirab** is a lightweight and test-friendly mediator designed to simplify command and query handling in .NET applications.  
 Nokpirab helps you implement the **CQRS pattern** cleanly — with minimal ceremony and maximum flexibility.
 
 > Nokpirab (นกพิราบ) means "pigeon" in Thai 🕊️ — a message carrier, like your reliable mediator.
+
+## Install Nokpirab
+
+It can be installed via Package Manager Console:
+```
+Install-Package Nokpirab
+```
+Or via .NET CLI:
+```
+dotnet add package Nokpirab
+```
 
 ## Register with DI
 

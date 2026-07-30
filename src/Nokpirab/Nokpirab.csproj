@@ -18,8 +18,12 @@
         <PackageIcon>nokpirab-icon.png</PackageIcon>
         <PackageReadmeFile>README.md</PackageReadmeFile>
         <IncludeSymbols>true</IncludeSymbols>
-        <IncludeSource>true</IncludeSource>
-        <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+        <SymbolPackageFormat>snupkg</SymbolPackageFormat>
+
+        <!-- SourceLink: lets consumers step into this source from their debugger.
+             The .NET 8+ SDK bundles the GitHub provider, so no extra package. -->
+        <PublishRepositoryUrl>true</PublishRepositoryUrl>
+        <EmbedUntrackedSources>true</EmbedUntrackedSources>
     </PropertyGroup>
 
     <ItemGroup>

@@ -1,0 +1,5 @@
+# Session context is local only. This repo is PUBLIC — session logs and checkpoints
+# are working notes, not published documentation. Only this rule is tracked, so it
+# travels with a clone; everything else here stays on the machine that wrote it.
+*
+!.gitignore

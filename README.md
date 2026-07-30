@@ -10,6 +10,10 @@ Nokpirab helps you implement the **CQRS pattern** cleanly — with minimal cerem
 
 > Nokpirab (นกพิราบ) means "pigeon" in Thai 🕊️ — a message carrier, like your reliable mediator.
 
+## Requirements
+
+.NET 8 or .NET 10.
+
 ## Install Nokpirab
 
 It can be installed via Package Manager Console:

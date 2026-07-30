@@ -1,0 +1,59 @@
+name: Release
+
+on:
+  push:
+    tags: [ 'v*' ]
+
+permissions:
+  contents: read
+
+jobs:
+  publish:
+    name: Pack & Publish
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+      with:
+        # SourceLink embeds commit information; a shallow clone loses it.
+        fetch-depth: 0
+
+    - name: Setup .NET
+      uses: actions/setup-dotnet@v4
+      with:
+        dotnet-version: |
+          8.0.x
+          10.0.x
+
+    - name: Verify tag matches package version
+      # Without this a mistyped tag silently publishes the wrong version, or
+      # re-publishes one that already exists on nuget.org.
+      run: |
+        TAG="${GITHUB_REF_NAME#v}"
+        VERSION=$(sed -n 's:.*<Version>\(.*\)</Version>.*:\1:p' src/Nokpirab/Nokpirab.csproj)
+        echo "tag=$TAG csproj=$VERSION"
+        if [ "$TAG" != "$VERSION" ]; then
+          echo "::error::Tag v$TAG does not match <Version>$VERSION</Version> in Nokpirab.csproj"
+          exit 1
+        fi
+
+    - name: Restore dependencies
+      run: dotnet restore
+
+    - name: Build
+      run: dotnet build --no-restore --configuration Release -p:ContinuousIntegrationBuild=true
+
+    - name: Test
+      run: dotnet test --no-build --configuration Release --verbosity normal
+
+    - name: Pack
+      run: dotnet pack src/Nokpirab --no-build --configuration Release -p:ContinuousIntegrationBuild=true --output artifacts
+
+    - name: Publish to NuGet
+      # The .snupkg beside the .nupkg is pushed automatically.
+      run: >
+        dotnet nuget push "artifacts/*.nupkg"
+        --api-key "${{ secrets.NUGET_API_KEY }}"
+        --source https://api.nuget.org/v3/index.json
+        --skip-duplicate

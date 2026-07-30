@@ -4,13 +4,16 @@ on:
   push:
     tags: [ 'v*' ]
 
-permissions:
-  contents: read
-
 jobs:
   publish:
     name: Pack & Publish
     runs-on: ubuntu-latest
+
+    permissions:
+      contents: read
+      # Required: lets this job request a signed OIDC token from GitHub, which
+      # nuget.org exchanges for a short-lived API key. No stored secret.
+      id-token: write
 
     steps:
     - name: Checkout code
@@ -50,10 +53,23 @@ jobs:
     - name: Pack
       run: dotnet pack src/Nokpirab --no-build --configuration Release -p:ContinuousIntegrationBuild=true --output artifacts
 
+    # Deliberately the second-to-last step: the temporary key is valid for one
+    # hour, so it is requested immediately before the push, after the slow
+    # build/test/pack work has already succeeded.
+    - name: NuGet login (OIDC -> short-lived API key)
+      uses: NuGet/login@v1
+      id: login
+      with:
+        # nuget.org username (profile name), NOT an email address, and it must
+        # be the owner holding the trusted publishing policy. Hardcoded because
+        # it is already public on the package page; move it to a secret or a
+        # repo variable if you would rather not have it in the workflow.
+        user: Exconeer
+
     - name: Publish to NuGet
       # The .snupkg beside the .nupkg is pushed automatically.
       run: >
         dotnet nuget push "artifacts/*.nupkg"
-        --api-key "${{ secrets.NUGET_API_KEY }}"
+        --api-key ${{ steps.login.outputs.NUGET_API_KEY }}
         --source https://api.nuget.org/v3/index.json
         --skip-duplicate

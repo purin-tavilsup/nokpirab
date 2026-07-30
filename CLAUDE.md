@@ -109,6 +109,36 @@ their run fail is a **major** version. Before merging a change to `src/`, check 
 - CI must be green before merge
 - This is a personal repo → `gh auth switch --user purin-tavilsup` before using `gh` here
 
+## Releasing
+
+Publishing is automated. `.github/workflows/release.yml` fires on a `v*` tag and pushes to nuget.org
+using [trusted publishing](https://learn.microsoft.com/nuget/nuget-org/trusted-publishing) (OIDC) —
+**no API key is stored anywhere**, in the repo or in its settings.
+
+1. Bump `<Version>` in `src/Nokpirab/Nokpirab.csproj`, checked against the contract rules above.
+2. Merge to `main` and push.
+3. `git tag vX.Y.Z && git push origin vX.Y.Z`
+
+The workflow builds, tests **both** target frameworks, packs, then exchanges an OIDC token for a
+one-hour key and pushes the `.nupkg` and `.snupkg`. It refuses to run when the tag does not match
+`<Version>`, so a mistyped tag fails loudly instead of publishing the wrong version. Re-tagging
+after a fix is safe — `--skip-duplicate` means a re-run will not error on a published version.
+
+What will trip you up:
+
+- **Run `gh auth switch --user purin-tavilsup` first.** The global git identity is a work account,
+  and a per-repo `user.email` override does *not* cover the push credential — pushing as the wrong
+  account fails with a bare `403`.
+- **Renaming `release.yml` breaks publishing.** The nuget.org policy is bound to that exact file
+  name (owner **Exconeer**, repo `purin-tavilsup/nokpirab`). Rename the file, update the policy.
+- **`Your package was pushed.` does not mean available.** nuget.org validates (scan + signature)
+  before indexing, which takes a few minutes. Confirm with
+  `curl https://api.nuget.org/v3-flatcontainer/nokpirab/index.json`.
+- **The GitHub release is manual:** `gh release create vX.Y.Z`. Automating it would need
+  `contents: write` on the release job, which it deliberately does not have.
+- **nuget.org shows no changelog** — `PackageReleaseNotes` is unset, so GitHub Releases is the only
+  place a consumer can see what changed.
+
 ## Quick Commands
 
 ```bash
